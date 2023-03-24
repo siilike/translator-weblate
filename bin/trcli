@@ -1,0 +1,5 @@
+#!/usr/bin/php
+<?php
+require_once($_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php');
+
+(new \Translator\CLI())->run();

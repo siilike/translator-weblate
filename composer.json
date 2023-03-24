@@ -1,0 +1,21 @@
+{
+	"name": "siilike/translator",
+	"license": "MIT",
+	"bin": [
+		"bin/trcli"
+	],
+	"autoload": {
+		"psr-4": {
+			"Translator\\": "src/"
+		}
+	},
+	"require": {
+		"gettext/gettext": "^5.7",
+		"splitbrain/php-cli": "^1.2",
+    "siilike/messageformat": "^1.0",
+		"ext-json": "*",
+		"ext-mbstring": "*"
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true
+}
