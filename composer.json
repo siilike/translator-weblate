@@ -1,5 +1,5 @@
 {
-	"name": "siilike/translator",
+	"name": "siilike/translator-weblate",
 	"license": "MIT",
 	"bin": [
 		"bin/trcli"
