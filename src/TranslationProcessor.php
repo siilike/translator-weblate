@@ -53,6 +53,118 @@ class TranslationProcessor
 		}
 	}
 
+	public static function ensureFullLocale($input, $separator = '-')
+	{
+		if(strlen($input) === 2)
+		{
+			$countries =
+			[
+				'af' => 'ZA', // ZA NA
+				'ar' => 'AR', // AR MA SA
+				'ay' => 'BO',
+				'az' => 'AZ',
+				'be' => 'BY',
+				'bg' => 'BG',
+				'bn' => 'IN', // IN BD
+				'bs' => 'BA',
+				'ca' => 'ES',
+				'ck' => 'US',
+				'cs' => 'CZ',
+				'cy' => 'GB',
+				'da' => 'DK',
+				'de' => 'DE', // DE AT CH
+				'el' => 'GR',
+				'en' => 'GB', // GB AU CA IE IN PI UD US ZA
+				'eo' => 'EO',
+				'es' => 'ES', // ES AR 419 CL CO EC LA NI MX US VE
+				'et' => 'EE',
+				'eu' => 'ES',
+				'fa' => 'IR',
+				'fi' => 'FI',
+				'fo' => 'FO',
+				'fr' => 'FR', // FR CA BE CH
+				'fy' => 'NL',
+				'ga' => 'IE',
+				'gl' => 'ES',
+				'gn' => 'PY',
+				'gu' => 'IN',
+				'gx' => 'GR',
+				'he' => 'IL',
+				'hi' => 'IN',
+				'hr' => 'HR',
+				'hu' => 'HU',
+				'hy' => 'AM',
+				'id' => 'ID',
+				'is' => 'IS',
+				'it' => 'IT',
+				'ja' => 'JP',
+				'jv' => 'ID',
+				'ka' => 'GE',
+				'kk' => 'KZ',
+				'km' => 'KH',
+				'kn' => 'IN',
+				'ko' => 'KR',
+				'ku' => 'TR',
+				'la' => 'VA',
+				'li' => 'NL',
+				'lt' => 'LT',
+				'lv' => 'LV',
+				'mg' => 'MG',
+				'mk' => 'MK',
+				'ml' => 'IN',
+				'mn' => 'MN',
+				'mr' => 'IN',
+				'ms' => 'MY',
+				'mt' => 'MT',
+				'nb' => 'NO',
+				'ne' => 'NP',
+				'nl' => 'NL', // NL BE
+				'nn' => 'NO',
+				'or' => 'IN',
+				'pa' => 'IN',
+				'pl' => 'PL',
+				'ps' => 'AF',
+				'pt' => 'PT', // PT BR
+				'qu' => 'PE',
+				'rm' => 'CH',
+				'ro' => 'RO',
+				'ru' => 'RU',
+				'sa' => 'IN',
+				'se' => 'NO',
+				'si' => 'LK',
+				'sk' => 'SK',
+				'sl' => 'SI',
+				'so' => 'SO',
+				'sq' => 'AL',
+				'sr' => 'RS',
+				'sv' => 'SE',
+				'sw' => 'KE',
+				'ta' => 'IN',
+				'te' => 'IN',
+				'tg' => 'TJ',
+				'th' => 'TH',
+				'tl' => 'PH',
+				'tr' => 'TR',
+				'tt' => 'RU',
+				'uk' => 'UA',
+				'ur' => 'PK',
+				'uz' => 'UZ',
+				'vi' => 'VN',
+				'xh' => 'ZA',
+				'yi' => 'DE',
+				'zh' => 'Hans', // CN Hans Hant HK SG TW
+				'zu' => 'ZA',
+				'lo' => 'LA',
+
+				'xx' => 'XX', // "unset"
+			];
+
+			return $input.$separator.$countries[$input];
+		}
+
+		return $input;
+	}
+
 	public static function exec(string $cmd, string $cwd = '.', array $env = []): string
 	{
 		$result = self::exec0($cmd, $cwd, $env);
@@ -185,9 +297,9 @@ class TranslationProcessor
 						continue;
 					}
 
-					$locale = $file->getBasename('.po');
+					$locale = static::ensureFullLocale($file->getBasename('.po'));
 
-					if(empty($d[$a->getName()][$locale]))
+					if(!array_key_exists($locale, $d[$a->getName()] ?? []))
 					{
 						$d[$a->getName()][$locale] = (new PoLoader())->loadFile($file->getPathname());
 					}
