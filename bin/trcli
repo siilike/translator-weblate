@@ -1,5 +1,27 @@
 #!/usr/bin/php
 <?php
-require_once($_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php');
+if(isset($GLOBALS['_composer_autoload_path']))
+{
+	define('COMPOSER_AUTOLOAD', $GLOBALS['_composer_autoload_path']);
+}
+else
+{
+	foreach([ __DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php' ] as $autoload)
+	{
+		if(file_exists($autoload))
+		{
+			define('COMPOSER_AUTOLOAD', $autoload);
+			break;
+		}
+	}
+}
+
+if(!defined('COMPOSER_AUTOLOAD'))
+{
+	echo "Composer installation directory not found\n";
+	exit(1);
+}
+
+require_once(COMPOSER_AUTOLOAD);
 
 (new \Translator\CLI())->run();
