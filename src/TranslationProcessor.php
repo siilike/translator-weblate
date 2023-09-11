@@ -559,7 +559,7 @@ class TranslationProcessor
 
 			foreach($conf->getTranslations() as $a)
 			{
-				$trs->add($a);
+				$trs->addOrMerge($a);
 			}
 		}
 
@@ -742,7 +742,7 @@ class TranslationProcessor
 			$b = Translation::create($a->getContext(), mb_strtolower($a->getTranslation()));
 			$b->translate($a->getOriginal());
 
-			$t->add($b);
+			$t->addOrMerge($b);
 		}
 
 		return $t;
