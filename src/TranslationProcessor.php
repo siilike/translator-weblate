@@ -246,7 +246,7 @@ class TranslationProcessor
 		}
 	}
 
-	public function writeTranslations(string $projectId, string $outputBaseDir, bool $validOnly = false): void
+	public function writeTranslations(string $projectId, string $outputBaseDir, bool $validOnly = false, bool $includeFuzzy = false): void
 	{
 		$out = $this->proj->getTranslationOutputs();
 
@@ -319,6 +319,11 @@ class TranslationProcessor
 					if($validOnly)
 					{
 						$d[$a->getName()][$locale] = $this->filterValidTranslations($locale, $d[$a->getName()][$locale]);
+					}
+
+					if(!$includeFuzzy)
+					{
+						$d[$a->getName()][$locale] = $this->filterFuzzyTranslations($d[$a->getName()][$locale]);
 					}
 
 					if($config && $config->isWithReverse())
@@ -526,6 +531,21 @@ class TranslationProcessor
 		foreach($ret->getTranslations() as $a)
 		{
 			if(!$this->isValid($locale, $a))
+			{
+				$ret->remove($a);
+			}
+		}
+
+		return $ret;
+	}
+
+	public function filterFuzzyTranslations(Translations $translations): Translations
+	{
+		$ret = clone $translations;
+
+		foreach($ret->getTranslations() as $a)
+		{
+			if($a->getFlags()->has('fuzzy'))
 			{
 				$ret->remove($a);
 			}
