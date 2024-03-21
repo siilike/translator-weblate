@@ -162,7 +162,7 @@ class TranslationProcessor
 			return $input.$separator.$countries[$input];
 		}
 
-		return $input;
+		return str_replace([ '-', '_' ], $separator, $input);
 	}
 
 	public static function exec(string $cmd, string $cwd = '.', array $env = []): string
