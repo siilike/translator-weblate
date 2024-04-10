@@ -246,8 +246,13 @@ class TranslationProcessor
 		}
 	}
 
-	public function writeTranslations(string $projectId, string $outputBaseDir, bool $validOnly = false, bool $includeFuzzy = false): void
+	public function writeTranslations(string $projectId, string $outputBaseDir, bool $validOnly = false, $includeFuzzy = false): void
 	{
+		if(is_array($includeFuzzy))
+		{
+			$includeFuzzy = array_map(fn($a) => self::ensureFullLocale($a), $includeFuzzy);
+		}
+
 		$out = $this->proj->getTranslationOutputs();
 
 		$configsByName = [];
@@ -321,7 +326,9 @@ class TranslationProcessor
 						$d[$a->getName()][$locale] = $this->filterValidTranslations($locale, $d[$a->getName()][$locale]);
 					}
 
-					if(!$includeFuzzy)
+					$includeFuzzy0 = $includeFuzzy === true || (is_array($includeFuzzy) && in_array($locale, $includeFuzzy));
+
+					if(!$includeFuzzy0)
 					{
 						$d[$a->getName()][$locale] = $this->filterFuzzyTranslations($d[$a->getName()][$locale]);
 					}

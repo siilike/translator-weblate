@@ -24,6 +24,7 @@ class CLI extends \splitbrain\phpcli\CLI
 		$options->registerOption('project-dir', 'Project directory to write outputs', 'd', 'directory', 'write');
 		$options->registerOption('valid-only', 'Only valid translations', 'x', false, 'write');
 		$options->registerOption('fuzzy', 'Include fuzzy translations', 'f', false, 'write');
+		$options->registerOption('fuzzy-locales', 'Include fuzzy translations for those locales (comma-separated)', null, true, 'write');
 	}
 
 	protected function main(Options $options)
@@ -85,9 +86,20 @@ class CLI extends \splitbrain\phpcli\CLI
 
 			$validOnly = !!$options->getOpt('valid-only');
 			$includeFuzzy = !!$options->getOpt('fuzzy');
+			$includeFuzzyLocales = array_filter(array_map('trim', explode(",", $options->getOpt('fuzzy-locales') ?? '')));
 
 			$this->info($validOnly ? 'Writing valid translations' : 'Writing translations');
-			$this->info($includeFuzzy ? 'Including fuzzy translations' : 'Excluding fuzzy translations');
+
+			if(!empty($includeFuzzyLocales))
+			{
+				$this->info('Including fuzzy translations for locales: '.join(", ", $includeFuzzyLocales));
+
+				$includeFuzzy = $includeFuzzyLocales;
+			}
+			else
+			{
+				$this->info($includeFuzzy ? 'Including fuzzy translations' : 'Excluding fuzzy translations');
+			}
 
 			$proc->writeTranslations($project, $projectDir, $validOnly, $includeFuzzy);
 
